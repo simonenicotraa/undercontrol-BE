@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +44,8 @@ public class AthleteController {
 	@GetMapping("/findAllAthletes")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> findAll() {
+	public ResponseEntity<?> findAll() {//(@RequestHeader(name = "Authorization") String token)
+		//REQUEST HEADER PER OTTENERE DATI DALL'HEADER DEL TOKEN
 		log.info("Called findAll");
 		List<Athlete> listUser = service.findAll();
 		return new ResponseEntity(listUser, HttpStatus.OK);

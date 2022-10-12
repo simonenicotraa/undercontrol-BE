@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.epicode.undercontrol.medicalcertificates.MedicalCertificate;
+import com.epicode.undercontrol.payments.Payment;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,9 +44,15 @@ public class Athlete {
 	private String cap;
 	@OneToMany
 	private Set<MedicalCertificate> listCertificates= new HashSet<>() ;
+	@OneToMany
+	private Set<Payment> listPayments= new HashSet<>() ;
 	
 	
 	public void addCertificate(MedicalCertificate m) {
 		listCertificates.add(m);
+	}
+	
+	public void addPayment(Payment p) {
+		listPayments.add(p);
 	}
 } 
