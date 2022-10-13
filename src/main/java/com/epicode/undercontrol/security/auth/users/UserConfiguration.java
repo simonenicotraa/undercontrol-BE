@@ -15,13 +15,10 @@ public class UserConfiguration {
 
 	@Bean("user1")
 	public UserDto user1() {
-		UserDto user = new UserDto("Gino", "giova","g.gino@gmail.com","Gino", "123456");
+		UserDto user = new UserDto("Gino", "giova","g.gino@gmail.com","Gino", "123456","team");
 		
 		return user;
 	}
-//	@Bean("user2")
-//	public User user2() {
-//		return new User("giudi", "111222");
-//	}
+
 
 }

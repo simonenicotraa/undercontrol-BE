@@ -1,5 +1,6 @@
 package com.epicode.undercontrol.security.auth.login;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,9 +53,16 @@ public class LoginController {
 				jwt, 
 				userDetails.getId(), 
 				userDetails.getUsername(),
+				userDetails.getSociety(),
 				roles
 			);
 		
+		String[] chunks = jwt.split("\\.");
+		Base64.Decoder decoder = Base64.getUrlDecoder();
+
+		String header = new String(decoder.decode(chunks[0]));
+		String payload = new String(decoder.decode(chunks[1]));
+		System.out.println(header + payload);
 		return ResponseEntity.ok(jwtresp);
 		
 	}

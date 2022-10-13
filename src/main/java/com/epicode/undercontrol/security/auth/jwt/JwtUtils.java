@@ -42,6 +42,8 @@ public class JwtUtils {
 		
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("role", userResponse.getRole());
+		//inserisco questo per aggiungere all'interno del token la nuova proprietà
+		claims.put("society", userPrincipal.getSociety());
 		claims.put("sub", userPrincipal.getUsername());
 		return Jwts.builder()
 				.setSubject(userPrincipal.getUsername())

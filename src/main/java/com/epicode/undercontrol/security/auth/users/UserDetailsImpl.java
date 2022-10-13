@@ -17,17 +17,18 @@ public class UserDetailsImpl  implements UserDetails{
 
 	private String username;
 
-
+	private String society;
 	@JsonIgnore
 	private String password;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Long id, String username, String password,
+	public UserDetailsImpl(Long id, String username, String password,String society,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.society=society;
 		this.authorities = authorities;
 		
 		
@@ -44,6 +45,7 @@ public class UserDetailsImpl  implements UserDetails{
 				user.getId(), 
 				user.getUsername(), 
 				user.getPassword(), 
+				user.getSociety(),
 				authorities);
 	}
 
@@ -56,6 +58,14 @@ public class UserDetailsImpl  implements UserDetails{
 		return id;
 	}
 
+
+	public String getSociety() {
+		return society;
+	}
+
+	public void setSociety(String society) {
+		this.society = society;
+	}
 
 	@Override
 	public String getPassword() {
