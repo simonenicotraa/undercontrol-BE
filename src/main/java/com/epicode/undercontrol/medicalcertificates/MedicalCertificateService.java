@@ -22,10 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MedicalCertificateService {
 	private AthleteRepository athlRepo;
 	private MedicalCertificatesRepository repo;
+	
 	// metodo per restituire tutti gli oggett
 		public List<MedicalCertificate> findAll() {
 			List<MedicalCertificate> findAll = (List<MedicalCertificate>) repo.findAll();
-			log.info("Found {} Coach", findAll.size());
+			log.info("Found {} MedicalCertificate", findAll.size());
 			return findAll;
 		}
 
@@ -35,18 +36,21 @@ public class MedicalCertificateService {
 			log.info("Finding object: id {}", id);
 			Optional<MedicalCertificate> resultOptional = repo.findById(id);
 			if (resultOptional.isPresent()) {
-				log.info("Found Coach: id {}", id);
+				log.info("Found MedicalCertificate: id {}", id);
 			} else {
-				log.info("Not found Coach: id {}", id);
+				log.info("Not found MedicalCertificate: id {}", id);
 			}
 			return resultOptional;
 		}
 
 		// Eliminare tramite oggetti Id
-		public void deleteById(Long id) {
+		public void deleteById(Long id,Long idAthl) {
 			if (!repo.existsById(id)) {
 				throw new EntityNotFoundException("MedicalCertificate not found");
 			}
+			Athlete a = athlRepo.findById(idAthl).get();
+			MedicalCertificate m = repo.getById(id);
+			a.removeCertificate(m);
 			repo.deleteById(id);
 			log.info("MedicalCertificate deleted");
 		}
@@ -80,6 +84,8 @@ public class MedicalCertificateService {
 			MedicalCertificate medicalCertificate = getById(id).get();
 			//copio le proprietà dto nell'entity principale
 			BeanUtils.copyProperties(dto, medicalCertificate);
+			// setto la data di scadenza del certificato medico
+			medicalCertificate.setExpirationDate(medicalCertificate.getProductionDate().plusDays(365));
 			//salvo nel db
 			return repo.save(medicalCertificate);
 		}

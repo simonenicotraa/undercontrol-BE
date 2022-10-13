@@ -43,10 +43,13 @@ public class PaymentService {
 	}
 
 	// Eliminare tramite oggetti Id
-	public void deleteById(Long id) {
+	public void deleteById(Long id ,Long idAthl) {
 		if (!payRepo.existsById(id)) {
 			throw new EntityNotFoundException("Payment not found");
 		}
+		Athlete a = athService.getById(idAthl).get();
+		Payment p = payRepo.getById(id);
+		a.removePayment(p);
 		payRepo.deleteById(id);
 		log.info("Payment deleted");
 	}

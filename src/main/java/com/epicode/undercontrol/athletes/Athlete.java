@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,8 +52,13 @@ public class Athlete {
 	public void addCertificate(MedicalCertificate m) {
 		listCertificates.add(m);
 	}
-	
+	public void removeCertificate(MedicalCertificate m) {
+		listCertificates.remove(m);
+	}
 	public void addPayment(Payment p) {
 		listPayments.add(p);
+	}
+	public void removePayment(Payment p) {
+		listPayments.remove(p);
 	}
 } 

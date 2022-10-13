@@ -57,18 +57,19 @@ public class PaymentController {
 	/**
 	 * Questo metodo elimina un oggetto dal sistema in base all'id selezionato
 	 */
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}/{idAthl}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		log.info("Called delete for Payment: {}", id);
-		try {
-			service.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			log.info("No Payment entity with id " + id + " exists!");
+	public ResponseEntity<?> delete(@PathVariable Long id, @PathVariable Long idAthl) {
+			log.info("Called delete for object: {}", id);
+			try {
+				service.deleteById(id,idAthl);
+			} catch (EmptyResultDataAccessException e) {
+				log.info("No User entity with id " + id + " exists!");
+			} 
+			return new ResponseEntity(HttpStatus.OK);
 		}
-		return new ResponseEntity("Payment with id: " + id + " deleted", HttpStatus.OK);
-	}
+	
 	
 	/**
 	 * Questo metodo ritorna un oggetto presente nel sistema con id indicato

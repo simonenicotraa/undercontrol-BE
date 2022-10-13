@@ -60,17 +60,13 @@ private MedicalCertificateService service;
 	/**
 	 * Questo metodo elimina un oggetto dal sistema in base all'id selezionato
 	 */
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{id}/{idAthl}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id,@PathVariable Long idAthl) {
 		log.info("Called delete for MedicalCertificate: {}", id);
-		try {
-			service.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
-			log.info("No User entity with id " + id + " exists!");
-		}
-		return new ResponseEntity("MedicalCertificate with id: " + id + " deleted", HttpStatus.OK);
+		service.deleteById(id, idAthl);
+		return ResponseEntity.ok("MedicalCertificate with id: " + id + " deleted");
 	}
 
 	/**
