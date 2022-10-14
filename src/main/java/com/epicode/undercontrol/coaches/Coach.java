@@ -44,4 +44,6 @@ public class Coach {
 	private String cap;
 	@OneToOne
 	private CoachLevel level;
+	
+	private String society;
 }

@@ -37,4 +37,5 @@ public class CoachDto {
 	@Column(length = 5,nullable = false)
 	private String cap;
 	
+	private String society;
 }

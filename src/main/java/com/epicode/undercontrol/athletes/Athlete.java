@@ -43,6 +43,9 @@ public class Athlete {
 	private String address;
 	@Column(length = 5,nullable = false)
 	private String cap;
+	
+	private String society;
+	
 	@OneToMany
 	private Set<MedicalCertificate> listCertificates= new HashSet<>() ;
 	@OneToMany

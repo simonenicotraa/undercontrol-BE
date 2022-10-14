@@ -37,4 +37,5 @@ public class AthleteDto {
 	@Column(length = 5,nullable = false)
 	private String cap;
 	
+	private String society;
 }

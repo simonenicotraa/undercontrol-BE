@@ -56,13 +56,13 @@ public class LoginController {
 				userDetails.getSociety(),
 				roles
 			);
-		
+//decodifico il token per vedere da cosa è composto	
 		String[] chunks = jwt.split("\\.");
 		Base64.Decoder decoder = Base64.getUrlDecoder();
-
 		String header = new String(decoder.decode(chunks[0]));
 		String payload = new String(decoder.decode(chunks[1]));
 		System.out.println(header + payload);
+		
 		return ResponseEntity.ok(jwtresp);
 		
 	}

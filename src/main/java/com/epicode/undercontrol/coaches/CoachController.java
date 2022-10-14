@@ -1,7 +1,9 @@
 package com.epicode.undercontrol.coaches;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,8 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.epicode.undercontrol.athletes.Athlete;
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,10 +41,33 @@ public class CoachController {
 	@GetMapping("/findAllCoaches")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> findAll() {
-		log.info("Called findAll");
-		List<Coach> listUser = service.findAll();
-		return new ResponseEntity(listUser, HttpStatus.OK);
+	public ResponseEntity<?> findAll(@RequestHeader(name = "Authorization") String token) {
+		//REQUEST HEADER PER OTTENERE DATI DALL'HEADER DEL TOKEN
+				//log.info(token);	log.info(token.replace("Bearer ", ""));
+				String tokenClean = token.replace("Bearer ", "");
+				//decodifico il token per vedere da cosa è composto	
+						String[] chunks = tokenClean.split("\\.");
+						Base64.Decoder decoder = Base64.getUrlDecoder();
+						String header = new String(decoder.decode(chunks[0]));
+						String payload = new String(decoder.decode(chunks[1]));
+						//System.out.println(payload);
+						//seleziono le parti del payload
+						String[] payloadPart = payload.split(",");				
+						//System.out.println(payloadPart[1]);
+						//accedo al dato che mi interessa --> società
+						String[] society = payloadPart[1].split(":");
+						//levo i doppi apici e li rimpiazzo con uno spazio che successivamente levo con trim
+						String societa = society[1].replace('"', ' ').trim();
+						//System.out.println(societa);
+				
+				log.info("Called findAll");
+				List<Coach> list = service.findAll();
+				List<Coach> listCoach = list.stream()
+												.filter(c-> c.getSociety().equalsIgnoreCase(societa))
+												.collect(Collectors.toList());
+				log.info("Called findAll");
+		
+				return new ResponseEntity(listCoach, HttpStatus.OK);
 	}
 
 	/**

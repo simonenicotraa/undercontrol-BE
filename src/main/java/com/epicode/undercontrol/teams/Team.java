@@ -30,6 +30,8 @@ private String name;
 private String season;
 private EGender gender;
 
+private String society;
+
 @ManyToMany
 Set<Athlete> athletes = new HashSet<>();
 @ManyToMany
