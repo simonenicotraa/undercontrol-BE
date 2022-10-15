@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.epicode.undercontrol.athletes.Athlete;
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
+import com.epicode.undercontrol.security.auth.users.User;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
@@ -42,32 +44,36 @@ public class CoachController {
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> findAll(@RequestHeader(name = "Authorization") String token) {
-		//REQUEST HEADER PER OTTENERE DATI DALL'HEADER DEL TOKEN
-				//log.info(token);	log.info(token.replace("Bearer ", ""));
+		// REQUEST HEADER PER OTTENERE DATI DALL'HEADER DEL TOKEN
+				// log.info(token); log.info(token.replace("Bearer ", ""));
 				String tokenClean = token.replace("Bearer ", "");
-				//decodifico il token per vedere da cosa è composto	
-						String[] chunks = tokenClean.split("\\.");
-						Base64.Decoder decoder = Base64.getUrlDecoder();
-						String header = new String(decoder.decode(chunks[0]));
-						String payload = new String(decoder.decode(chunks[1]));
-						//System.out.println(payload);
-						//seleziono le parti del payload
-						String[] payloadPart = payload.split(",");				
-						//System.out.println(payloadPart[1]);
-						//accedo al dato che mi interessa --> società
-						String[] society = payloadPart[1].split(":");
-						//levo i doppi apici e li rimpiazzo con uno spazio che successivamente levo con trim
-						String societa = society[1].replace('"', ' ').trim();
-						//System.out.println(societa);
-				
-				log.info("Called findAll");
-				List<Coach> list = service.findAll();
-				List<Coach> listCoach = list.stream()
-												.filter(c-> c.getSociety().equalsIgnoreCase(societa))
-												.collect(Collectors.toList());
-				log.info("Called findAll");
-		
-				return new ResponseEntity(listCoach, HttpStatus.OK);
+				// decodifico il token per vedere da cosa è composto
+				String[] chunks = tokenClean.split("\\.");
+				Base64.Decoder decoder = Base64.getUrlDecoder();
+				String header = new String(decoder.decode(chunks[0]));
+				String payload = new String(decoder.decode(chunks[1]));
+				// System.out.println(payload);
+				// seleziono le parti del payload
+				String[] payloadPart = payload.split(",");
+				// System.out.println(payloadPart[1]);
+				// accedo al dato che mi interessa --> società
+				String[] society = payloadPart[1].split(":");
+				// levo i doppi apici e li rimpiazzo con uno spazio che successivamente levo con
+				// trim
+				String societa = society[1].replace('"', ' ').trim();
+				System.out.println(societa);
+				//se il team è undercontrol (nome team del developer) allora mostra tutto
+				if (societa.equalsIgnoreCase("UnderControl")) {
+					log.info("Called findAll");
+					List<Coach> list = service.findAll();
+					return new ResponseEntity(list, HttpStatus.OK);
+				} else {
+					log.info("Called findAll");
+					List<Coach> list = service.findAll();
+					List<Coach> listTeam = list.stream().filter(c -> c.getSociety().equalsIgnoreCase(societa))
+							.collect(Collectors.toList());
+					return new ResponseEntity(listTeam, HttpStatus.OK);
+				}
 	}
 
 	/**

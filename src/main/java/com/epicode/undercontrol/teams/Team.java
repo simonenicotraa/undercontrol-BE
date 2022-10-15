@@ -43,4 +43,10 @@ public void addAthlete(Athlete a){
 public void addCoach(Coach c){
 	coaches.add(c);
 }
+public void removeAthlete(Athlete a){
+	athletes.remove(a);
+}
+public void removeCoach(Coach c){
+	coaches.remove(c);
+}
 }

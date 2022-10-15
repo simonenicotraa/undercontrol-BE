@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.epicode.undercontrol.coaches.Coach;
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,14 +60,19 @@ public class AthleteController {
 				//levo i doppi apici e li rimpiazzo con uno spazio che successivamente levo con trim
 				String societa = society[1].replace('"', ' ').trim();
 				//System.out.println(societa);
+				//se il team è undercontrol (nome team del developer) allora mostra tutto
+				if (societa.equalsIgnoreCase("UnderControl")) {
+					log.info("Called findAll");
+					List<Athlete> list = service.findAll();
+					return new ResponseEntity(list, HttpStatus.OK);
+				} else {
+					log.info("Called findAll");
+					List<Athlete> list = service.findAll();
+					List<Athlete> listTeam = list.stream().filter(c -> c.getSociety().equalsIgnoreCase(societa))
+							.collect(Collectors.toList());
+					return new ResponseEntity(listTeam, HttpStatus.OK);
+				}
 		
-		log.info("Called findAll");
-		List<Athlete> list = service.findAll();
-		List<Athlete> listAthl = list.stream()
-										.filter(c-> c.getSociety().equalsIgnoreCase(societa))
-										.collect(Collectors.toList());
-		
-		return new ResponseEntity(listAthl, HttpStatus.OK);
 	}
 
 	/**

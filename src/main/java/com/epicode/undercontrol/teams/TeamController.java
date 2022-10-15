@@ -63,13 +63,18 @@ public class TeamController {
 						//levo i doppi apici e li rimpiazzo con uno spazio che successivamente levo con trim
 						String societa = society[1].replace('"', ' ').trim();
 						//System.out.println(societa);
-				
-				log.info("Called findAll");
-				List<Team> list = service.findAll();
-				List<Team> listTeam = list.stream()
-												.filter(c-> c.getSociety().equalsIgnoreCase(societa))
-												.collect(Collectors.toList());
-				return new ResponseEntity(listTeam, HttpStatus.OK);
+						//se il team è undercontrol (nome team del developer) allora mostra tutto
+						if (societa.equalsIgnoreCase("UnderControl")) {
+							log.info("Called findAll");
+							List<Team> list = service.findAll();
+							return new ResponseEntity(list, HttpStatus.OK);
+						} else {
+							log.info("Called findAll");
+							List<Team> list = service.findAll();
+							List<Team> listTeam = list.stream().filter(c -> c.getSociety().equalsIgnoreCase(societa))
+									.collect(Collectors.toList());
+							return new ResponseEntity(listTeam, HttpStatus.OK);
+						}
 	}
 
 	/**
@@ -124,21 +129,36 @@ public class TeamController {
 
 	
 	/**
-	 * Questi due metodi servono per aggiornare le liste di coach e atleti presenti
-	 * all'interno della classe Team. Hanno due modi di operarare differenti.
+	 * Questi due metodi servono per aggiornare (AGGIUNGERE) le liste di coach e atleti presenti
+	 * all'interno della classe Team. Hanno due modi di operare differenti.
 	 * Entrambi funzionanti
 	 */
 	@PatchMapping("/updateListAtl/{id}")
-	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<Team> patchListAthl(@PathVariable Long id, @RequestBody TeamDtoListAthletes dto) {
-		return ResponseEntity.ok(service.updateAthleteList(id, dto));
+	public ResponseEntity<Team> patchListAddAthl(@PathVariable Long id, @RequestBody TeamDtoListAthletes dto) {
+		return ResponseEntity.ok(service.updateAddAthleteList(id, dto));
 	}
 
 	@PatchMapping("/updateListCoach/{idTeam}/{idCoach}")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<Team> patchListCoach(@PathVariable Long idTeam, @PathVariable Long idCoach) {
-		return ResponseEntity.ok(service.updateCoachList(idTeam, idCoach));
+	public ResponseEntity<Team> patchListAddCoach(@PathVariable Long idTeam, @PathVariable Long idCoach) {
+		return ResponseEntity.ok(service.updateAddCoachList(idTeam, idCoach));
+	}
+	
+	/**
+	 * Questi due metodi servono per aggiornare (RIMUOVERE) le liste di coach e atleti presenti
+	 * all'interno della classe Team. Hanno due modi di operare differenti.
+	 * Entrambi funzionanti
+	 */
+	@PatchMapping("/updateListRemoveAtl/{idTeam}/{idAthlete}")
+	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
+	public ResponseEntity<Team> patchListRemoveAthl(@PathVariable Long idTeam, @PathVariable Long idAthlete) {
+		return ResponseEntity.ok(service.updateAthleteRemoveList(idTeam, idAthlete));
 	}
 
+	@PatchMapping("/updateListRemoveCoach/{idTeam}/{idCoach}")
+	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
+	public ResponseEntity<Team> patchListRemoveCoach(@PathVariable Long idTeam, @PathVariable Long idCoach) {
+		return ResponseEntity.ok(service.updateCoachRemoveList(idTeam, idCoach));
+	}
 }

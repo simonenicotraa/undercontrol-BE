@@ -24,12 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	@Autowired
 	UserRepository userRepository;
-	@Autowired
-	@Qualifier("admin")
-	Role admin;
-	@Autowired
-	@Qualifier("user")
-	Role user;
+	@Autowired	@Qualifier("admin")	Role admin;
+	@Autowired	@Qualifier("user")	Role user;
+	@Autowired	@Qualifier("developer")	Role developer;
+	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -55,7 +53,29 @@ public class UserService {
 		log.info("Found {} objects", findAll.size());
 		return findAll;
 	}
-
+	//Metodo per salvataggio utente-ADMIN-SUPREMO	
+		public User insertAdminSupremo(UserDto objectToInsert) {
+			//verifico se già esiste l'username
+			if(userRepository.existsByUsername(objectToInsert.getUsername())) {
+				throw new EntityExistsException("Username already in use");
+			}
+			else {
+			log.info("Inserting object: {}", objectToInsert);
+			// Applico la codifica della password -- equivalente nella seguente riga
+			// objectToInsert.setPassword(passwordEncoder.encode(objectToInsert.getPassword()));
+			doBeforeSave(objectToInsert);
+			//Costruisco un oggetto
+			User result = new User();
+			// copio le proprietà del dto nell'entity principale
+			BeanUtils.copyProperties(objectToInsert, result);
+			// aggiungo il ruolo
+			result.addRole(developer);
+			// Salvo l'utente che sarà ADMIN
+			userRepository.save(result);
+			log.info("Inserted object: {}", result);
+			return result;
+			}
+		}
 	//Metodo per salvataggio utente-ADMIN
 	public User insertAdmin(UserDto objectToInsert) {
 		//verifico se già esiste l'username
