@@ -82,7 +82,7 @@ public class CoachController {
 	@PostMapping("/insertCoach")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<Coach> insertAdmin(@RequestBody CoachDto objectToInsert) throws UserExceptionNotValid {
+	public ResponseEntity<Coach> insertCoach(@RequestBody CoachDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
 		return ResponseEntity.ok(service.insertCoach(objectToInsert));
 	}
@@ -105,11 +105,12 @@ public class CoachController {
 
 	/**
 	 * Questo metodo aggiorna un atleta già presente nel sistema
+	 * @throws Exception 
 	 */
 	@PutMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> update(@RequestBody CoachDto dto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody CoachDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for object: {}", service.getById(id));
 		return ResponseEntity.ok(service.update(id, dto));
 	}

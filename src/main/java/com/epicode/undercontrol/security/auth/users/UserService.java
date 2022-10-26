@@ -77,13 +77,24 @@ public class UserService {
 			}
 		}
 	//Metodo per salvataggio utente-ADMIN
-	public User insertAdmin(UserDto objectToInsert) {
+	public User insertAdmin(UserDto objectToInsert) throws Exception {
 		//verifico se già esiste l'username
 		if(userRepository.existsByUsername(objectToInsert.getUsername())) {
 			throw new EntityExistsException("Username already in use");
 		}
 		else {
 		log.info("Inserting object: {}", objectToInsert);
+			if(objectToInsert.getName().length()==0){
+				throw new Exception("Name Field is empty!");
+			}else if(objectToInsert.getSurname().length()==0){
+				throw new Exception("Surname Field is empty!");
+			}else if(objectToInsert.getEmail().length()==0){
+				throw new Exception("Email Field is empty!");
+			}else if(objectToInsert.getUsername().length()==0){
+				throw new Exception("Username Field is empty!");
+			}else if(objectToInsert.getPassword().length()==0){
+				throw new Exception("Password Field is empty!");
+			}
 		// Applico la codifica della password -- equivalente nella seguente riga
 		// objectToInsert.setPassword(passwordEncoder.encode(objectToInsert.getPassword()));
 		doBeforeSave(objectToInsert);
@@ -101,10 +112,21 @@ public class UserService {
 	}
 
 	// Metodo per Salvataggio utente-USER
-	public User insertUser(UserDto objectToInsert) {
+	public User insertUser(UserDto objectToInsert) throws Exception {
 		//verifico se già esiste l'username
 		if(userRepository.existsByUsername(objectToInsert.getUsername())) {
 			throw new EntityExistsException("Username already exist in use");
+		}
+		if(objectToInsert.getName().length()==0){
+			throw new Exception("Name Field is empty!");
+		}else if(objectToInsert.getSurname().length()==0){
+			throw new Exception("Surname Field is empty!");
+		}else if(objectToInsert.getEmail().length()==0){
+			throw new Exception("Email Field is empty!");
+		}else if(objectToInsert.getUsername().length()==0){
+			throw new Exception("Username Field is empty!");
+		}else if(objectToInsert.getPassword().length()==0){
+			throw new Exception("Password Field is empty!");
 		}
 		log.info("Inserting object: {}", objectToInsert);
 		// Applico la codifica della password -- equivalente nella seguente riga
@@ -122,6 +144,12 @@ public class UserService {
 	}
 
 	void doBeforeSave(UserDto savedObject) {
+		if (StringUtils.isNotEmpty(savedObject.getPassword())) {
+			String encoded = passwordEncoder.encode(savedObject.getPassword());
+			savedObject.setPassword(encoded);
+		}
+	}
+	void doBeforeSaveCredentialUpdate(UserCredentialDto savedObject) {
 		if (StringUtils.isNotEmpty(savedObject.getPassword())) {
 			String encoded = passwordEncoder.encode(savedObject.getPassword());
 			savedObject.setPassword(encoded);
@@ -164,13 +192,19 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 	
-	public User update(Long id, UserDto dto) {
+	public User updateCredential(Long id, UserCredentialDto dto) throws Exception {
 		//verifico se esiste l'utente con id che passo
 		if (!userRepository.existsById(id)) {
 			throw new EntityNotFoundException("User Not Found");
 		}
+		if(dto.getUsername().length()==0) {
+			throw new Exception("Username field is empty!");
+		}
+		if(dto.getPassword().length()==0) {
+			throw new Exception("Password field is empty!");
+		}
 		//codifico la psw
-		doBeforeSave(dto);
+		doBeforeSaveCredentialUpdate(dto);
 		//ottengo l'oggetto che voglio tramite id
 		User user = getById(id);
 		//copio le proprietà
@@ -178,7 +212,25 @@ public class UserService {
 		//,odifico le proprieta e salvo nel db
 		return userRepository.save(user);
 	}
-
+	public User updateInfo(Long id, UserInfoDto dto) throws Exception {
+		//verifico se esiste l'utente con id che passo
+		if (!userRepository.existsById(id)) {
+			throw new EntityNotFoundException("User Not Found");
+		}
+		if(dto.getName().length()==0) {
+			throw new Exception("Field is empty!");
+		}else if(dto.getSurname().length()==0){
+			throw new Exception("Field is empty!");
+		}else if(dto.getEmail().length()==0){
+			throw new Exception("Field is empty!");
+		}
+		//ottengo l'oggetto che voglio tramite id
+		User user = getById(id);
+		//copio le proprietà
+		BeanUtils.copyProperties(dto, user);
+		//,odifico le proprieta e salvo nel db
+		return userRepository.save(user);
+	}
 
 	}
 

@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,11 +40,12 @@ public class UserController {
 
 	/**
 	 * Questo metodo inserisce un nuovo oggetto - Admin nel sistema
+	 * @throws Exception 
 	 */
 	@PostMapping("/insertAdmin")
 	@PreAuthorize("hasRole('DEVELOPER')")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<User> insertAdmin(@RequestBody UserDto objectToInsert) throws UserExceptionNotValid {
+	public ResponseEntity<User> insertAdmin(@RequestBody UserDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
 		return ResponseEntity.ok(service.insertAdmin(objectToInsert));
 	}
@@ -54,10 +56,10 @@ public class UserController {
 	@PostMapping("/insertUser")
 	@PreAuthorize("hasRole('ADMIN')")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<User> insertUser(@RequestBody UserDto objectToInsert) throws UserExceptionNotValid {
+	public ResponseEntity<User> insertUser(@RequestBody UserDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
 		return ResponseEntity.ok(service.insertUser(objectToInsert));
-	}
+	} 
 
 	@GetMapping("/getByUsername")
 	@PreAuthorize("isAuthenticated()")
@@ -130,7 +132,7 @@ public class UserController {
 	 * Questo metodo elimina un oggetto dal sistema in base all'id selezionato
 	 */
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','DEVELOPER')")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		log.info("Called delete for object: {}", id);
@@ -143,14 +145,25 @@ public class UserController {
 	}
 
 	/**
-	 * Questo metodo aggiorna un oggetto già presente nel sistema
+	 * Questo metodo aggiorna le credenziali di un oggetto già presente nel sistema
+	 * @throws Exception 
 	 */
-	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PatchMapping("/updateCredential/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN','DEVELOPER')")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> update(@RequestBody UserDto dto, @PathVariable Long id) {
+	public ResponseEntity<?> updateCredential(@RequestBody UserCredentialDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for object: {}", service.getById(id));
-		return ResponseEntity.ok(service.update(id, dto));
-
+		return ResponseEntity.ok(service.updateCredential(id, dto));
+	}
+	/**
+	 * Questo metodo aggiorna le informazioni di un oggetto già presente nel sistema
+	 * @throws Exception 
+	 */
+	@PatchMapping("/updateInfo/{id}")
+	@PreAuthorize("isAuthenticated()")
+	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
+	public ResponseEntity<?> updateInfo(@RequestBody UserInfoDto dto, @PathVariable Long id) throws Exception {
+		log.info("Called update for object: {}", service.getById(id));
+		return ResponseEntity.ok(service.updateInfo(id, dto));
 	}
 }

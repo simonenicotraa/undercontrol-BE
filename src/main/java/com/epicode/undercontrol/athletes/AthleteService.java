@@ -69,10 +69,20 @@ public class AthleteService {
 	}
 
 	// Metodo per Salvataggio Atleta
-	public Athlete insertAthlete(AthleteDto objectToInsert) {
+	public Athlete insertAthlete(AthleteDto objectToInsert) throws Exception {
 		// verifico se già esiste il codice Fiscale. Se esiste mando eccezione
 		if (athleteRepo.existsByFiscalCode(objectToInsert.getFiscalCode())) {
 			throw new EntityExistsException("Athlete already exists");
+		}else if(objectToInsert.getName().length()==0) {
+			throw new Exception("Name field is empty");
+		}else if(objectToInsert.getSurname().length()==0) {
+			throw new Exception("Surname field is empty");
+		}else if(objectToInsert.getEmail().length()==0) {
+			throw new Exception("Email field is empty");
+		}else if(objectToInsert.getFiscalCode().length()==0) {
+			throw new Exception("FiscalCode field is empty");
+		}else if(objectToInsert.getNTel().length()==0) {
+			throw new Exception("Number Telephone field is empty");
 		}
 		log.info("Inserting Athlete: {}", objectToInsert);
 		Athlete result = new Athlete();
@@ -85,11 +95,21 @@ public class AthleteService {
 	}
 	
 	//Metodo per modificare Dati atleta
-	public Athlete update(Long id, AthleteDto dto) {
+	public Athlete update(Long id, AthleteDto dto) throws Exception {
 		//verifico se esiste l'utente con id che passo
 		if (!athleteRepo.existsById(id)) {
 			throw new EntityNotFoundException("Athlete Not Found");
-		}
+		}else if(dto.getName().length()==0) {
+			throw new Exception("Name field is empty");
+		}else if(dto.getSurname().length()==0) {
+			throw new Exception("Surname field is empty");
+		}else if(dto.getEmail().length()==0) {
+			throw new Exception("Email field is empty");
+		}else if(dto.getFiscalCode().length()==0) {
+			throw new Exception("FiscalCode field is empty");
+		}else if(dto.getNTel().length()==0) {
+			throw new Exception("Number Telephone field is empty");
+		};
 		//ottengo l'oggetto che voglio tramite id
 		Athlete athlete = getById(id).get();
 		//copio le proprietà dto nell'entity principale

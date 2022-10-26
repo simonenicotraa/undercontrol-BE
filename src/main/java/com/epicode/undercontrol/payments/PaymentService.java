@@ -27,6 +27,10 @@ public class PaymentService {
 	public List<Payment> findAll() {
 		List<Payment> findAll = (List<Payment>) payRepo.findAll();
 		log.info("Found {} Payment", findAll.size());
+		for (Payment payment : findAll) {
+			payment.reviewPaymentStatus();
+		}
+		payRepo.saveAll(findAll);
 		return findAll;
 	}
 
@@ -67,6 +71,7 @@ public class PaymentService {
 		BeanUtils.copyProperties(objectToInsert, payment);
 		//aggiungo il pagamento alla lista pagamenti dell'atleta
 		a.addPayment(payment);
+		payment.reviewPaymentStatus();
 		payRepo.save(payment);
 		log.info("Inserted Payment: {}", payment);
 		return payment;

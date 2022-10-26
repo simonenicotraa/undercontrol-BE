@@ -3,7 +3,6 @@ package com.epicode.undercontrol.medicalcertificates;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.BeanUtils;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.epicode.undercontrol.athletes.Athlete;
 import com.epicode.undercontrol.athletes.AthleteRepository;
-import com.epicode.undercontrol.athletes.AthleteService;
+
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +25,11 @@ public class MedicalCertificateService {
 	// metodo per restituire tutti gli oggett
 		public List<MedicalCertificate> findAll() {
 			List<MedicalCertificate> findAll = (List<MedicalCertificate>) repo.findAll();
+			for (MedicalCertificate ele : findAll) {
+				ele.verifyValidation();
+			}
+			repo.flush();
+			repo.saveAll(findAll);
 			log.info("Found {} MedicalCertificate", findAll.size());
 			return findAll;
 		}
@@ -65,8 +69,10 @@ public class MedicalCertificateService {
 			BeanUtils.copyProperties(objectToInsert, medicalCertificate);
 			// setto la data di scadenza del certificato medico
 			medicalCertificate.setExpirationDate(medicalCertificate.getProductionDate().plusDays(365));
+			medicalCertificate.verifyValidation();
 			//aggiungo il certificato alla lista di certificati
 			a.addCertificate(medicalCertificate);
+			
 			repo.save(medicalCertificate);
 			
 			

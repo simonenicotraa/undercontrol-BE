@@ -81,7 +81,7 @@ public class AthleteController {
 	@PostMapping("/insertAthletes")
 //	@PreAuthorize("isAuthenticated()")
 //	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<Athlete> insert(@RequestBody AthleteDto objectToInsert) throws UserExceptionNotValid {
+	public ResponseEntity<Athlete> insert(@RequestBody AthleteDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
 		return ResponseEntity.ok(service.insertAthlete(objectToInsert));
 	}
@@ -104,11 +104,12 @@ public class AthleteController {
 
 	/**
 	 * Questo metodo aggiorna un atleta già presente nel sistema
+	 * @throws Exception 
 	 */
 	@PutMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> update(@RequestBody AthleteDto dto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody AthleteDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for object: {}", service.getById(id));
 		return ResponseEntity.ok(service.update(id, dto));
 	}

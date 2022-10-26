@@ -13,9 +13,11 @@ import com.epicode.undercontrol.athletes.Athlete;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
+@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicalCertificate {
@@ -24,6 +26,17 @@ public class MedicalCertificate {
 	private Long id;
 	private LocalDate productionDate;
 	private LocalDate expirationDate;
-
+	private boolean validation;
 	
+	
+	public void verifyValidation() {
+	if(expirationDate.equals(LocalDate.now()) || expirationDate.isAfter(LocalDate.now())) {
+		
+		validation=true;
+	}else {
+		validation=false;
+	}
+	}
+
 }
+

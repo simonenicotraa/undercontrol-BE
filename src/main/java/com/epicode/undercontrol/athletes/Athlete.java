@@ -1,11 +1,14 @@
 package com.epicode.undercontrol.athletes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,9 +50,10 @@ public class Athlete {
 	private String society;
 	
 	@OneToMany
-	private Set<MedicalCertificate> listCertificates= new HashSet<>() ;
+	private List<MedicalCertificate> listCertificates= new ArrayList<MedicalCertificate>();
+	
 	@OneToMany
-	private Set<Payment> listPayments= new HashSet<>() ;
+	private List<Payment> listPayments= new ArrayList<Payment>();
 	
 	
 	public void addCertificate(MedicalCertificate m) {
@@ -64,4 +68,5 @@ public class Athlete {
 	public void removePayment(Payment p) {
 		listPayments.remove(p);
 	}
+
 } 

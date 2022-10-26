@@ -64,10 +64,20 @@ public class CoachService {
 	}
 
 	// Metodo per Salvataggio Coach
-	public Coach insertCoach(CoachDto objectToInsert) {
+	public Coach insertCoach(CoachDto objectToInsert) throws Exception {
 		// verifico se già esiste il codice Fiscale. Se esiste mando eccezione
 		if (athleteRepo.existsByFiscalCode(objectToInsert.getFiscalCode())) {
 			throw new EntityExistsException("Coach already exists");
+		}else if(objectToInsert.getName().length()==0) {
+			throw new Exception("Name field is empty");
+		}else if(objectToInsert.getSurname().length()==0) {
+			throw new Exception("Surname field is empty");
+		}else if(objectToInsert.getEmail().length()==0) {
+			throw new Exception("Email field is empty");
+		}else if(objectToInsert.getFiscalCode().length()==0) {
+			throw new Exception("FiscalCode field is empty");
+		}else if(objectToInsert.getNTel().length()==0) {
+			throw new Exception("Number Telephone field is empty");
 		}
 		log.info("Inserting Coach: {}", objectToInsert);
 		Coach coach = new Coach();
@@ -80,10 +90,20 @@ public class CoachService {
 	}
 	
 	//Metodo per modificare Dati atleta
-	public Coach update(Long id, CoachDto dto) {
+	public Coach update(Long id, CoachDto dto) throws Exception {
 		//verifico se esiste l'utente con id che passo
 		if (!athleteRepo.existsById(id)) {
 			throw new EntityNotFoundException("Coach Not Found");
+		}else if(dto.getName().length()==0) {
+			throw new Exception("Name field is empty");
+		}else if(dto.getSurname().length()==0) {
+			throw new Exception("Surname field is empty");
+		}else if(dto.getEmail().length()==0) {
+			throw new Exception("Email field is empty");
+		}else if(dto.getFiscalCode().length()==0) {
+			throw new Exception("FiscalCode field is empty");
+		}else if(dto.getNTel().length()==0) {
+			throw new Exception("Number Telephone field is empty");
 		}
 		//ottengo l'oggetto che voglio tramite id
 		Coach coach = getById(id).get();
