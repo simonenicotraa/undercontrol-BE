@@ -54,8 +54,13 @@ public class TeamService {
 	}
 
 	// Metodo per Salvataggio Team
-	public Team insert(TeamDto objectToInsert) {
+	public Team insert(TeamDto objectToInsert) throws Exception {
 		log.info("Inserting Athlete: {}", objectToInsert);
+		if(objectToInsert.getName().length()==0) {
+			throw new Exception("Insert name of team");
+		}else if(objectToInsert.getSeason().length()==0) {
+			throw new Exception("Insert season");
+		}
 		Team result = new Team();
 		// copio le proprietà del dto nell'entity principale
 		BeanUtils.copyProperties(objectToInsert, result);
@@ -66,10 +71,14 @@ public class TeamService {
 	}
 
 	// Metodo per modificare Dati Team
-	public Team update(Long id, TeamDto dto) {
+	public Team update(Long id, TeamDto dto) throws Exception {
 		// verifico se esiste Team con id che passo
 		if (!repo.existsById(id)) {
 			throw new EntityNotFoundException("Team Not Found");
+		}		if(dto.getName().length()==0) {
+			throw new Exception("Insert name of team");
+		}else if(dto.getSeason().length()==0) {
+			throw new Exception("Insert season");
 		}
 		// ottengo l'oggetto che voglio tramite id
 		Team team = getById(id);

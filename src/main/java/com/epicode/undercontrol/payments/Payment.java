@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import com.epicode.undercontrol.athletes.Athlete;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,13 +27,16 @@ public class Payment {
 	private Integer payed;
 	private boolean paymentStatus;
 	
+	private Long Idathlete;
+	
+	private String society;
 	public void reviewPaymentStatus() {
 		if(amount.equals(payed)) {
 			paymentStatus= true;
-			log.info("prova vero" );
+			//log.info("prova vero" );
 		}else {
 			paymentStatus=false;
-			log.info("prova falso" );
+			//log.info("prova falso" );
 		}
 	}
 }

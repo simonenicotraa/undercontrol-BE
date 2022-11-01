@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class PaymentDto {
 private String season;
 private Integer amount;
+
+private String society;
 }

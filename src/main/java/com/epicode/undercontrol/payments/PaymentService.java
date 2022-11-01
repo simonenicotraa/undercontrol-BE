@@ -57,11 +57,15 @@ public class PaymentService {
 		payRepo.deleteById(id);
 		log.info("Payment deleted");
 	}
-
+ 
 	// Metodo per Salvataggio oggetti
-	public Payment insert(PaymentDto objectToInsert, Long id) {
+	public Payment insert(PaymentDto objectToInsert, Long id) throws Exception {
 		if (payRepo.existsById(id)) {
 			throw new EntityExistsException("Payment Already exists");
+		}else if(objectToInsert.getSeason().length()==0){
+			throw new Exception("Insert the season");
+		}else if(objectToInsert.getAmount()==null) {
+			throw new Exception("Insert the Amount");
 		}
 		log.info("Inserting Payment: {}", objectToInsert);
 		//prendo l'atleta per id
@@ -71,23 +75,36 @@ public class PaymentService {
 		BeanUtils.copyProperties(objectToInsert, payment);
 		//aggiungo il pagamento alla lista pagamenti dell'atleta
 		a.addPayment(payment);
+		payment.setIdathlete(a.getId());
 		payment.reviewPaymentStatus();
 		payRepo.save(payment);
 		log.info("Inserted Payment: {}", payment);
 		return payment;
 	}
 
-	public Payment update(Long id, PaymentDtoComplete dto) {
+	public Payment update(Long id, PaymentDtoComplete dto) throws Exception {
 		if (!payRepo.existsById(id)) {
 			throw new EntityNotFoundException("Payment not found");
+		} else if(dto.getSeason().length()==0){
+			throw new Exception("Insert the season");
+		}else if(dto.getAmount()==null) {
+			throw new Exception("Insert the Amount");
+		}else if(dto.getPayed()==null) {
+			throw new Exception("Insert how much athlete payed");
 		}
 		Payment p = payRepo.findById(id).get();
 		// verifico se è nullo perchè se inizialmente non inserisco nessun valore il
 		// getPayed sarà null
-		if (p.getPayed() != null) {
-			dto.setPayed(p.getPayed() + dto.getPayed());
+		if (p.getPayed() != null ) {			
+			
+			if((p.getPayed() + dto.getPayed()) > p.getAmount()){
+				throw new Exception("Payment has exceeded total amount");	
+			}	
+				else dto.setPayed(p.getPayed() + dto.getPayed());
+		} 
+		if(p.getPayed() ==null && dto.getPayed()>p.getAmount()) {
+			throw new Exception("Payment has exceeded total amount");
 		}
-
 		BeanUtils.copyProperties(dto, p);
 		return payRepo.save(p);
 	}

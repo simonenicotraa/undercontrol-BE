@@ -42,11 +42,12 @@ private MedicalCertificateService service;
 
 	/**
 	 * Questo metodo inserisce un nuovo oggetto nel sistema
+	 * @throws Exception 
 	 */
 	@PostMapping("/insertMedicalCertificate{id}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<MedicalCertificate> insert(@RequestBody MedicalCertificateDto objectToInsert,@PathVariable Long id) {
+	public ResponseEntity<MedicalCertificate> insert(@RequestBody MedicalCertificateDto objectToInsert,@PathVariable Long id) throws Exception {
 		log.info("Called insert for MedicalCertificate: {}", objectToInsert);
 		return ResponseEntity.ok(service.insert(objectToInsert,id));
 	}
@@ -65,11 +66,12 @@ private MedicalCertificateService service;
 
 	/**
 	 * Questo metodo aggiorna un MedicalCertificate già presente nel sistema
+	 * @throws Exception 
 	 */
 	@PutMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> update(@RequestBody MedicalCertificateDto dto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody MedicalCertificateDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for MedicalCertificate: {}", service.getById(id));
 		return ResponseEntity.ok(service.update(id, dto));
 	}

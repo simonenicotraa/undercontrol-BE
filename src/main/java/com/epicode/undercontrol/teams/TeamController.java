@@ -2,7 +2,6 @@ package com.epicode.undercontrol.teams;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.epicode.undercontrol.athletes.Athlete;
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
-import com.epicode.undercontrol.security.auth.users.User;
-import com.epicode.undercontrol.security.auth.users.UserDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -79,11 +74,12 @@ public class TeamController {
 
 	/**
 	 * Questo metodo inserisce un nuovo Team nel sistema
+	 * @throws Exception 
 	 */
 	@PostMapping("/insertTeam")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<Team> insert(@RequestBody TeamDto objectToInsert) throws UserExceptionNotValid {
+	public ResponseEntity<Team> insert(@RequestBody TeamDto objectToInsert) throws Exception {
 		log.info("Called insert for object: {}", objectToInsert);
 		return ResponseEntity.ok(service.insert(objectToInsert));
 	}
@@ -106,11 +102,12 @@ public class TeamController {
 
 	/**
 	 * Questo metodo aggiorna, le proprieta presenti su teamDto un Team già presente nel sistema 
+	 * @throws Exception 
 	 */
 	@PutMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
-	public ResponseEntity<?> update(@RequestBody TeamDto dto, @PathVariable Long id) {
+	public ResponseEntity<?> update(@RequestBody TeamDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for Team: {}", service.getById(id));
 		return ResponseEntity.ok(service.update(id, dto));
 	}

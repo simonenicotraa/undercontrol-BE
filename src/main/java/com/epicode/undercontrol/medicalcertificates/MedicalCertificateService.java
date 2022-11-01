@@ -60,8 +60,10 @@ public class MedicalCertificateService {
 		}
 
 		// Metodo per Salvataggio oggetti
-		public MedicalCertificate insert(MedicalCertificateDto objectToInsert, Long id) {
-			
+		public MedicalCertificate insert(MedicalCertificateDto objectToInsert, Long id) throws Exception {
+			if(objectToInsert.getProductionDate()==null) {
+				throw new Exception("Insert Medical Production Date");
+			}
 			log.info("Inserting MedicalCertificate: {}", objectToInsert);
 			Athlete a = athlRepo.findById(id).get();
 			MedicalCertificate medicalCertificate = new MedicalCertificate();
@@ -81,10 +83,12 @@ public class MedicalCertificateService {
 		}
 		
 		//Metodo per modificare Dati oggetti
-		public MedicalCertificate update(Long id, MedicalCertificateDto dto) {
+		public MedicalCertificate update(Long id, MedicalCertificateDto dto) throws Exception {
 			//verifico se esiste l'utente con id che passo
 			if (!repo.existsById(id)) {
 				throw new EntityNotFoundException("MedicalCertificate Not Found");
+			}else if(dto.getProductionDate()==null) {
+				throw new Exception("Insert Medical Production Date");
 			}
 			//ottengo l'oggetto che voglio tramite id
 			MedicalCertificate medicalCertificate = getById(id).get();
