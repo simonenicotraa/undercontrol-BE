@@ -12,7 +12,7 @@ Front-End di questo progetto -> https://github.com/simonenicotraa/undercontrol-s
 </br>
 
 <ul>
-<p><strong>Entity del progetto</strong></p>
+<p><strong>Entity del progetto:</strong></p>
 <li>User</li>
 <li>Athlete</li>
 <li>Coach</li>
