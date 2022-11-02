@@ -74,10 +74,14 @@ public class CoachService {
 			throw new Exception("Surname field is empty");
 		}else if(objectToInsert.getEmail().length()==0) {
 			throw new Exception("Email field is empty");
-		}else if(objectToInsert.getFiscalCode().length()==0) {
-			throw new Exception("FiscalCode field is empty");
+		}else if(objectToInsert.getFiscalCode().length()==0 || objectToInsert.getFiscalCode().length()!=16) {
+			throw new Exception("FiscalCode field is empty or incorrect");
 		}else if(objectToInsert.getNTel().length()==0) {
 			throw new Exception("Number Telephone field is empty");
+		}else if(objectToInsert.getAddress().length()==0) {
+			throw new Exception("Address field is empty");
+		}else if(!objectToInsert.getCap().matches("^[0-9]{5}$")) {
+			throw new Exception("Cap field is empty or wrong. (You need to insert 5 number)");
 		}
 		log.info("Inserting Coach: {}", objectToInsert);
 		Coach coach = new Coach();
@@ -100,10 +104,14 @@ public class CoachService {
 			throw new Exception("Surname field is empty");
 		}else if(dto.getEmail().length()==0) {
 			throw new Exception("Email field is empty");
-		}else if(dto.getFiscalCode().length()==0) {
-			throw new Exception("FiscalCode field is empty");
+		}else if(dto.getFiscalCode().length()==0 || dto.getFiscalCode().length()!=16) {
+			throw new Exception("FiscalCode field is empty or incorrect");
 		}else if(dto.getNTel().length()==0) {
 			throw new Exception("Number Telephone field is empty");
+		}else if(dto.getAddress().length()==0) {
+			throw new Exception("Address field is empty");
+		}else if(!dto.getCap().matches("^[0-9]{5}$")) {
+			throw new Exception("Cap field is empty or wrong. (You need to insert 5 number)");
 		}
 		//ottengo l'oggetto che voglio tramite id
 		Coach coach = getById(id).get();
