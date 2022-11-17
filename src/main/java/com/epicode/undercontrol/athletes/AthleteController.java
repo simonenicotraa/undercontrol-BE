@@ -86,7 +86,12 @@ public class AthleteController {
 //	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<Athlete> insert( @RequestBody AthleteDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
-		return ResponseEntity.ok(service.insertAthlete(objectToInsert));
+		try {
+			return ResponseEntity.ok(service.insertAthlete(objectToInsert));
+		} catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
+		
 	}
 
 	/**
