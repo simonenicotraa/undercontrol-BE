@@ -27,12 +27,12 @@ public class UnderControlRunner implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 
-		roleRepository.save(admin);
-		roleRepository.save(user);
-		roleRepository.save(developer);
-
-		userService.insertAdmin(user1);
-		userService.insertAdminSupremo(adminSupremo);
+//		roleRepository.save(admin);
+//		roleRepository.save(user);
+//		roleRepository.save(developer);
+//
+//		userService.insertAdmin(user1);
+//		userService.insertAdminSupremo(adminSupremo);
 	}
 
 }
