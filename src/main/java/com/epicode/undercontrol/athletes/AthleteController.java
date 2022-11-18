@@ -119,7 +119,12 @@ public class AthleteController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> update(@RequestBody AthleteDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for object: {}", service.getById(id));
-		return ResponseEntity.ok(service.update(id, dto));
+		try {
+			return ResponseEntity.ok(service.update(id, dto));
+		} catch (Exception e){
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
+		
 	}
 	/**
 	 * Questo metodo ritorna un oggetto presente nel sistema con id indicato

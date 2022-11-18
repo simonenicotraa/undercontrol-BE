@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
+import com.epicode.undercontrol.security.auth.roles.ERole;
 import com.epicode.undercontrol.security.auth.roles.Role;
 
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +104,9 @@ public class UserService {
 		// copio le proprietà del dto nell'entity principale
 		BeanUtils.copyProperties(objectToInsert, result);
 		// aggiungo il ruolo
-		result.addRole(admin);
+		//result.addRole(admin);
+		Role userApp = new Role(ERole.ROLE_ADMIN);
+		result.addRole(userApp);
 		// Salvo l'utente che sarà ADMIN
 		userRepository.save(result);
 		log.info("Inserted object: {}", result);
@@ -136,7 +139,9 @@ public class UserService {
 		// copio le proprietà del dto nell'entity principale
 		BeanUtils.copyProperties(objectToInsert, result);
 		// aggiungo il ruolo
-		result.addRole(user);
+		//result.addRole(user);
+		Role userApp = new Role(ERole.ROLE_USER);
+		result.addRole(userApp);
 		// Salvo l'utente che sarà USER
 		userRepository.save(result);
 		log.info("Inserted object: {}", result);

@@ -58,7 +58,11 @@ public class UserController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<User> insertUser(@RequestBody UserDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
+		try {
 		return ResponseEntity.ok(service.insertUser(objectToInsert));
+		} catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	} 
 
 	@GetMapping("/getByUsername")
