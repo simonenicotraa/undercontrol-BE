@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.epicode.undercontrol.errors.UserExceptionNotValid;
 import com.epicode.undercontrol.security.auth.roles.ERole;
 import com.epicode.undercontrol.security.auth.roles.Role;
+import com.epicode.undercontrol.security.auth.roles.RoleRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
 	@Autowired	@Qualifier("admin")	Role admin;
 	@Autowired	@Qualifier("user")	Role user;
 	@Autowired	@Qualifier("developer")	Role developer;
@@ -106,6 +109,7 @@ public class UserService {
 		// aggiungo il ruolo
 		//result.addRole(admin);
 		Role userApp = new Role(ERole.ROLE_ADMIN);
+		roleRepository.save(userApp);
 		result.addRole(userApp);
 		// Salvo l'utente che sarà ADMIN
 		userRepository.save(result);
@@ -141,6 +145,7 @@ public class UserService {
 		// aggiungo il ruolo
 		//result.addRole(user);
 		Role userApp = new Role(ERole.ROLE_USER);
+		roleRepository.save(userApp);
 		result.addRole(userApp);
 		// Salvo l'utente che sarà USER
 		userRepository.save(result);
