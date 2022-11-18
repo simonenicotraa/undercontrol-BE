@@ -84,7 +84,11 @@ public class CoachController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<Coach> insertCoach(@RequestBody CoachDto objectToInsert) throws UserExceptionNotValid,Exception {
 		log.info("Called insert for object: {}", objectToInsert);
-		return ResponseEntity.ok(service.insertCoach(objectToInsert));
+		try{
+			return ResponseEntity.ok(service.insertCoach(objectToInsert));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 
 	/**
@@ -112,7 +116,11 @@ public class CoachController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> update(@RequestBody CoachDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for object: {}", service.getById(id));
-		return ResponseEntity.ok(service.update(id, dto));
+		try{
+			return ResponseEntity.ok(service.update(id, dto));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 	/**
 	 * Questo metodo ritorna un oggetto presente nel sistema con id indicato

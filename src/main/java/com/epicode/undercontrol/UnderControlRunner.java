@@ -26,7 +26,7 @@ public class UnderControlRunner implements ApplicationRunner {
 	@Qualifier("adminSupremo")	UserDto adminSupremo;
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-
+// li commento perchè con il deploy effettuo upgrade del db
 //		roleRepository.save(admin);
 //		roleRepository.save(user);
 //		roleRepository.save(developer);

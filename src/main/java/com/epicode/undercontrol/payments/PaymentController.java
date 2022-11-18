@@ -85,7 +85,12 @@ public class PaymentController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<Payment> insert(@RequestBody PaymentDto objectToInsert,@PathVariable Long id) throws Exception {
 		log.info("Called insert for Payment: {}", objectToInsert);
-		return ResponseEntity.ok(service.insert(objectToInsert,id));
+		try {
+			return ResponseEntity.ok(service.insert(objectToInsert,id));
+		}
+		catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 	
 	/**
@@ -121,7 +126,11 @@ public class PaymentController {
 	@PreAuthorize("isAuthenticated()")
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> update(@PathVariable Long id,@RequestBody PaymentDtoComplete dto) throws Exception{
-		return ResponseEntity.ok(service.update(id, dto));
+		try{
+			return ResponseEntity.ok(service.update(id, dto));
+		} catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 	
 	

@@ -81,7 +81,11 @@ public class TeamController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<Team> insert(@RequestBody TeamDto objectToInsert) throws Exception {
 		log.info("Called insert for object: {}", objectToInsert);
-		return ResponseEntity.ok(service.insert(objectToInsert));
+		try{
+			return ResponseEntity.ok(service.insert(objectToInsert));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 
 	/**
@@ -109,7 +113,11 @@ public class TeamController {
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> update(@RequestBody TeamDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for Team: {}", service.getById(id));
-		return ResponseEntity.ok(service.update(id, dto));
+		try{
+			return ResponseEntity.ok(service.update(id, dto));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 
 	/**

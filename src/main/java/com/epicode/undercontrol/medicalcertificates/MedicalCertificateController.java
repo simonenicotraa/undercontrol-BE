@@ -49,7 +49,11 @@ private MedicalCertificateService service;
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<MedicalCertificate> insert(@RequestBody MedicalCertificateDto objectToInsert,@PathVariable Long id) throws Exception {
 		log.info("Called insert for MedicalCertificate: {}", objectToInsert);
-		return ResponseEntity.ok(service.insert(objectToInsert,id));
+		try{
+			return ResponseEntity.ok(service.insert(objectToInsert,id));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 
 	/**
@@ -73,7 +77,11 @@ private MedicalCertificateService service;
 	@Operation(security = @SecurityRequirement(name = "bearer-authentication"))
 	public ResponseEntity<?> update(@RequestBody MedicalCertificateDto dto, @PathVariable Long id) throws Exception {
 		log.info("Called update for MedicalCertificate: {}", service.getById(id));
-		return ResponseEntity.ok(service.update(id, dto));
+		try{
+			return ResponseEntity.ok(service.update(id, dto));
+		}catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.OK);
+		}
 	}
 	/**
 	 * Questo metodo ritorna un oggetto presente nel sistema con id indicato
